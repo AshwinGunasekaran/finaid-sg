@@ -57,7 +57,23 @@ export default async function SchemePage({ params }) {
             {scheme.categories?.name}
           </span>
           <h1 className="text-3xl font-bold text-gray-900 mt-4 mb-2">{scheme.title}</h1>
-          <p className="text-gray-500 text-sm mb-4">Provider: {scheme.provider}</p>
+          <div className="flex items-center gap-4 mb-4">
+            <p className="text-gray-500 text-sm">Provider: {scheme.provider}</p>
+            {scheme.last_scraped && (
+              <span className="text-xs bg-green-50 text-green-600 border border-green-200 px-2 py-1 rounded-full">
+                ✓ Updated {new Date(scheme.last_scraped).toLocaleDateString('en-SG', {
+                  day: 'numeric',
+                  month: 'short',
+                  year: 'numeric'
+                })}
+              </span>
+            )}
+            {!scheme.last_scraped && (
+              <span className="text-xs bg-gray-50 text-gray-500 border border-gray-200 px-2 py-1 rounded-full">
+                Manually verified
+              </span>
+            )}
+          </div>
           <p className="text-gray-700 leading-relaxed">{scheme.description}</p>
 
           {scheme.amount && (

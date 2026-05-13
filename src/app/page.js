@@ -2,6 +2,7 @@ import { supabase } from '@/lib/supabase'
 import Link from 'next/link'
 import { Search, GraduationCap, Shield, Wallet, BookOpen, Home as HomeIcon, CreditCard, Car, Building } from 'lucide-react'
 import SearchBar from './browse/SearchBar'
+import { Suspense } from 'react'
 
 const categoryIcons = {
   'scholarships': GraduationCap,
@@ -61,7 +62,9 @@ export default async function Home() {
             Scholarships, loans, insurance and government subsidies — all in one place, always up to date.
           </p>
           <div className="max-w-xl mx-auto">
-            <SearchBar selectedCategory={null} />
+            <Suspense fallback={<div className="h-12 bg-gray-100 rounded-full animate-pulse" />}>
+              <SearchBar selectedCategory={null} />
+            </Suspense>
           </div>
         </div>
       </section>
