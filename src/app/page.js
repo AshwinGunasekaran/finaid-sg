@@ -1,6 +1,6 @@
 import { supabase } from '@/lib/supabase'
 import Link from 'next/link'
-import { Search, GraduationCap, Shield, Wallet, BookOpen } from 'lucide-react'
+import { Search, GraduationCap, Shield, Wallet, BookOpen, Home as HomeIcon, CreditCard, Car, Building } from 'lucide-react'
 import SearchBar from './browse/SearchBar'
 
 const categoryIcons = {
@@ -8,6 +8,10 @@ const categoryIcons = {
   'student-loans': BookOpen,
   'insurance': Shield,
   'financial-assistance': Wallet,
+  'housing-loans': HomeIcon,
+  'personal-loans': CreditCard,
+  'car-loans': Car,
+  'business-loans': Building,
 }
 
 const categoryColors = {
@@ -15,6 +19,10 @@ const categoryColors = {
   'student-loans': 'bg-purple-50 text-purple-600 border-purple-200',
   'insurance': 'bg-green-50 text-green-600 border-green-200',
   'financial-assistance': 'bg-orange-50 text-orange-600 border-orange-200',
+  'housing-loans': 'bg-red-50 text-red-600 border-red-200',
+  'personal-loans': 'bg-pink-50 text-pink-600 border-pink-200',
+  'car-loans': 'bg-yellow-50 text-yellow-600 border-yellow-200',
+  'business-loans': 'bg-teal-50 text-teal-600 border-teal-200',
 }
 
 export default async function Home() {

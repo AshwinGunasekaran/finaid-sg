@@ -1,13 +1,17 @@
 import { supabase } from '@/lib/supabase'
 import Link from 'next/link'
-import { Search, GraduationCap, Shield, Wallet, BookOpen } from 'lucide-react'
+import { Search, GraduationCap, Shield, Wallet, BookOpen, Home, CreditCard, Car, Building } from 'lucide-react'
 import SearchBar from './SearchBar'
 
 const categoryIcons = {
-    'scholarships': GraduationCap,
-    'student-loans': BookOpen,
-    'insurance': Shield,
-    'financial-assistance': Wallet,
+  'scholarships': GraduationCap,
+  'student-loans': BookOpen,
+  'insurance': Shield,
+  'financial-assistance': Wallet,
+  'housing-loans': Home,
+  'personal-loans': CreditCard,
+  'car-loans': Car,
+  'business-loans': Building,
 }
 
 export default async function BrowsePage({ searchParams }) {
