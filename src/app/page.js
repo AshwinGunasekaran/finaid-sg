@@ -1,6 +1,7 @@
 import { supabase } from '@/lib/supabase'
 import Link from 'next/link'
 import { Search, GraduationCap, Shield, Wallet, BookOpen } from 'lucide-react'
+import SearchBar from './browse/SearchBar'
 
 const categoryIcons = {
   'scholarships': GraduationCap,
@@ -50,13 +51,8 @@ export default async function Home() {
           <p className="text-lg text-gray-500 mb-8">
             Scholarships, loans, insurance and government subsidies — all in one place, always up to date.
           </p>
-          <div className="flex items-center bg-gray-100 rounded-full px-5 py-3 max-w-xl mx-auto">
-            <Search className="text-gray-400 w-5 h-5 mr-3" />
-            <input
-              type="text"
-              placeholder="Search scholarships, insurance, subsidies..."
-              className="bg-transparent flex-1 outline-none text-gray-700 text-sm"
-            />
+          <div className="max-w-xl mx-auto">
+            <SearchBar selectedCategory={null} />
           </div>
         </div>
       </section>
