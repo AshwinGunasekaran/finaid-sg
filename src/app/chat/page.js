@@ -1,6 +1,7 @@
 'use client'
 
 import ReactMarkdown from 'react-markdown'
+import remarkGfm from 'remark-gfm'
 import { useState } from 'react'
 import Link from 'next/link'
 import { Send, Bot, User, Loader2 } from 'lucide-react'
@@ -105,7 +106,28 @@ export default function ChatPage() {
                                     : 'bg-white border border-gray-200 text-gray-700 rounded-tl-none'
                                     }`}
                             >
-                                <ReactMarkdown>
+                                <ReactMarkdown
+                                    remarkPlugins={[remarkGfm]}
+                                    components={{
+                                        table: ({ node, ...props }) => (
+                                            <div className="overflow-x-auto my-2">
+                                                <table className="min-w-full text-sm border border-gray-200 rounded-lg overflow-hidden" {...props} />
+                                            </div>
+                                        ),
+                                        thead: ({ node, ...props }) => (
+                                            <thead className="bg-blue-50 text-blue-700" {...props} />
+                                        ),
+                                        th: ({ node, ...props }) => (
+                                            <th className="px-4 py-2 text-left font-semibold border-b border-gray-200" {...props} />
+                                        ),
+                                        td: ({ node, ...props }) => (
+                                            <td className="px-4 py-2 border-b border-gray-100" {...props} />
+                                        ),
+                                        tr: ({ node, ...props }) => (
+                                            <tr className="hover:bg-gray-50" {...props} />
+                                        ),
+                                    }}
+                                >
                                     {msg.content}
                                 </ReactMarkdown>
                             </div>

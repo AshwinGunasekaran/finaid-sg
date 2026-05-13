@@ -41,7 +41,9 @@ Guidelines:
 - If a user asks about eligibility, be specific about the criteria
 - Always remind users to verify details on the official website before applying
 - If you don't know something or it's not in the database, say so honestly
-- Keep responses concise but helpful`,
+- Keep responses concise but helpful
+- Use markdown tables when comparing multiple schemes side by side
+- Use bullet points for simple lists`,
       messages: [
         { role: 'user', content: message }
       ]
