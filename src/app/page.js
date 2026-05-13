@@ -46,6 +46,7 @@ export default async function Home() {
           <div className="flex gap-6 text-sm text-gray-600">
             <Link href="/browse" className="hover:text-blue-600">Browse</Link>
             <Link href="/chat" className="hover:text-blue-600">AI Assistant</Link>
+            <Link href="/about" className="hover:text-blue-600">About</Link>
           </div>
         </div>
       </nav>

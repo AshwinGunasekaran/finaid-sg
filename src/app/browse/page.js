@@ -4,14 +4,14 @@ import { Search, GraduationCap, Shield, Wallet, BookOpen, Home, CreditCard, Car,
 import SearchBar from './SearchBar'
 
 const categoryIcons = {
-  'scholarships': GraduationCap,
-  'student-loans': BookOpen,
-  'insurance': Shield,
-  'financial-assistance': Wallet,
-  'housing-loans': Home,
-  'personal-loans': CreditCard,
-  'car-loans': Car,
-  'business-loans': Building,
+    'scholarships': GraduationCap,
+    'student-loans': BookOpen,
+    'insurance': Shield,
+    'financial-assistance': Wallet,
+    'housing-loans': Home,
+    'personal-loans': CreditCard,
+    'car-loans': Car,
+    'business-loans': Building,
 }
 
 export default async function BrowsePage({ searchParams }) {
@@ -55,8 +55,9 @@ export default async function BrowsePage({ searchParams }) {
                         FinAid SG
                     </Link>
                     <div className="flex gap-6 text-sm text-gray-600">
-                        <Link href="/browse" className="text-blue-600 font-medium">Browse</Link>
+                        <Link href="/browse" className="hover:text-blue-600">Browse</Link>
                         <Link href="/chat" className="hover:text-blue-600">AI Assistant</Link>
+                        <Link href="/about" className="hover:text-blue-600">About</Link>
                     </div>
                 </div>
             </nav>
