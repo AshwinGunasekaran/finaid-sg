@@ -44,9 +44,12 @@ export default async function SchemePage({ params }) {
 
         {/* Header */}
         <div className="bg-white border border-gray-200 rounded-2xl p-8 mb-6">
-          <span className="text-xs font-medium text-blue-600 bg-blue-50 px-3 py-1 rounded-full">
-            {scheme.categories?.name}
-          </span>
+          <div className="flex items-start justify-between">
+            <span className="text-xs font-medium text-blue-600 bg-blue-50 px-3 py-1 rounded-full">
+              {scheme.categories?.name}
+            </span>
+            <SaveButton schemeId={scheme.id} />
+          </div>
           <h1 className="text-3xl font-bold text-gray-900 mt-4 mb-2">{scheme.title}</h1>
           <div className="flex items-center gap-4 mb-4">
             <p className="text-gray-500 text-sm">Provider: {scheme.provider}</p>
@@ -130,17 +133,24 @@ export default async function SchemePage({ params }) {
               <h2 className="text-lg font-semibold text-gray-900">How To Apply</h2>
             </div>
             <p className="text-gray-700 mb-6">Click the button below to go to the official application page.</p>
-            <div className="flex items-center gap-3">
-              <a
-                href={scheme.apply_url}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 bg-blue-600 text-white px-6 py-3 rounded-full font-medium hover:bg-blue-700 transition"
+            <div className="flex flex-col gap-3">
+              <div className="flex items-center gap-3">
+                <a
+                  href={scheme.apply_url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-2 bg-blue-600 text-white px-6 py-3 rounded-full font-medium hover:bg-blue-700 transition"
+                >
+                  Apply Now
+                  <ExternalLink className="w-4 h-4" />
+                </a>
+              </div>
+              <Link
+                href={`/compare?scheme=${scheme.slug}`}
+                className="text-sm text-gray-400 hover:text-blue-600 transition flex items-center gap-1"
               >
-                Apply Now
-                <ExternalLink className="w-4 h-4" />
-              </a>
-              <SaveButton schemeId={scheme.id} />
+                Compare this scheme with others →
+              </Link>
             </div>
           </div>
         )}

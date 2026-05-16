@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import { supabase } from '@/lib/supabase'
-import { Bookmark, BookmarkCheck } from 'lucide-react'
+import { Bookmark } from 'lucide-react'
 
 export default function SaveButton({ schemeId }) {
   const [saved, setSaved] = useState(false)
@@ -55,23 +55,14 @@ export default function SaveButton({ schemeId }) {
     <button
       onClick={toggleSave}
       disabled={loading}
-      className={`flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium border transition ${
+      title={saved ? 'Remove from saved' : 'Save scheme'}
+      className={`p-2 rounded-full transition ${
         saved
-          ? 'bg-blue-600 text-white border-blue-600'
-          : 'bg-white text-gray-600 border-gray-200 hover:border-blue-400'
-      }`}
+          ? 'text-blue-600 hover:text-blue-700'
+          : 'text-gray-300 hover:text-gray-400'
+      } disabled:opacity-50`}
     >
-      {saved ? (
-        <>
-          <BookmarkCheck className="w-4 h-4" />
-          Saved
-        </>
-      ) : (
-        <>
-          <Bookmark className="w-4 h-4" />
-          Save Scheme
-        </>
-      )}
+      <Bookmark className={`w-6 h-6 ${saved ? 'fill-blue-600' : ''}`} />
     </button>
   )
 }
