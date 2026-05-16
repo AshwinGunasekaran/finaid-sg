@@ -47,6 +47,9 @@ export default function Navbar({ activePage }) {
           <Link href="/compare" className={activePage === 'compare' ? 'text-blue-600 font-medium' : 'hover:text-blue-600'}>
             Compare
           </Link>
+          <Link href="/alerts" className={activePage === 'alerts' ? 'text-blue-600 font-medium' : 'hover:text-blue-600'}>
+            Alerts
+          </Link>
           <Link href="/chat" className={activePage === 'chat' ? 'text-blue-600 font-medium' : 'hover:text-blue-600'}>
             AI Assistant
           </Link>
