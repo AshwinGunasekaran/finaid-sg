@@ -51,7 +51,7 @@ export default function Navbar({ activePage }) {
           FinAid SG
         </Link>
 
-        {/* Main nav links - centered */}
+        {/* Main navbar links - centered */}
         <div className="absolute left-1/2 -translate-x-1/2 flex items-center gap-1">
           {[
             { label: 'Browse', href: '/browse', key: 'browse' },
