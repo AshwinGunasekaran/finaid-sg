@@ -2,6 +2,7 @@ import { supabase } from '@/lib/supabase'
 import Link from 'next/link'
 import { Search, GraduationCap, Shield, Wallet, BookOpen, Home, CreditCard, Car, Building } from 'lucide-react'
 import SearchBar from './SearchBar'
+import Navbar from '@/app/components/navbar'
 
 const categoryIcons = {
     'scholarships': GraduationCap,
@@ -49,18 +50,7 @@ export default async function BrowsePage({ searchParams }) {
     return (
         <main className="min-h-screen bg-gray-50">
             {/* Navbar */}
-            <nav className="bg-white border-b border-gray-200 px-6 py-4">
-                <div className="max-w-6xl mx-auto flex items-center justify-between">
-                    <Link href="/" className="text-xl font-bold text-blue-600">
-                        FinAid SG
-                    </Link>
-                    <div className="flex gap-6 text-sm text-gray-600">
-                        <Link href="/browse" className="hover:text-blue-600">Browse</Link>
-                        <Link href="/chat" className="hover:text-blue-600">AI Assistant</Link>
-                        <Link href="/about" className="hover:text-blue-600">About</Link>
-                    </div>
-                </div>
-            </nav>
+            <Navbar activePage="home" />
 
             <div className="max-w-6xl mx-auto px-6 py-10">
                 <h1 className="text-2xl font-bold text-gray-900 mb-2">Browse Schemes</h1>

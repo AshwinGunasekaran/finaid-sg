@@ -4,6 +4,7 @@ import ReactMarkdown from 'react-markdown'
 import remarkGfm from 'remark-gfm'
 import { useState } from 'react'
 import Link from 'next/link'
+import Navbar from '@/app/components/navbar'
 import { Send, Bot, User, Loader2 } from 'lucide-react'
 
 export default function ChatPage() {
@@ -60,17 +61,7 @@ export default function ChatPage() {
     return (
         <main className="min-h-screen bg-gray-50 flex flex-col">
             {/* Navbar */}
-            <nav className="bg-white border-b border-gray-200 px-6 py-4">
-                <div className="max-w-6xl mx-auto flex items-center justify-between">
-                    <Link href="/" className="text-xl font-bold text-blue-600">
-                        FinAid SG
-                    </Link>
-                    <div className="flex gap-6 text-sm text-gray-600">
-                        <Link href="/browse" className="hover:text-blue-600">Browse</Link>
-                        <Link href="/chat" className="text-blue-600 font-medium">AI Assistant</Link>
-                    </div>
-                </div>
-            </nav>
+            <Navbar activePage="home" />
 
             {/* Chat header */}
             <div className="bg-white border-b border-gray-200 px-6 py-4">

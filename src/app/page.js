@@ -3,6 +3,7 @@ import Link from 'next/link'
 import { Search, GraduationCap, Shield, Wallet, BookOpen, Home as HomeIcon, CreditCard, Car, Building } from 'lucide-react'
 import SearchBar from './browse/SearchBar'
 import { Suspense } from 'react'
+import Navbar from '@/app/components/navbar'
 
 const categoryIcons = {
   'scholarships': GraduationCap,
@@ -39,18 +40,7 @@ export default async function Home() {
   return (
     <main className="min-h-screen bg-gray-50">
       {/* Navbar */}
-      <nav className="bg-white border-b border-gray-200 px-6 py-4">
-        <div className="max-w-6xl mx-auto flex items-center justify-between">
-          <Link href="/" className="text-xl font-bold text-blue-600">
-            FinAid SG
-          </Link>
-          <div className="flex gap-6 text-sm text-gray-600">
-            <Link href="/browse" className="hover:text-blue-600">Browse</Link>
-            <Link href="/chat" className="hover:text-blue-600">AI Assistant</Link>
-            <Link href="/about" className="hover:text-blue-600">About</Link>
-          </div>
-        </div>
-      </nav>
+      <Navbar activePage="home" />
 
       {/* Hero */}
       <section className="bg-white border-b border-gray-200 py-20 px-6">

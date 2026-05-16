@@ -1,6 +1,8 @@
 import { supabase } from '@/lib/supabase'
 import Link from 'next/link'
 import { ArrowLeft, ExternalLink, CheckCircle, Info, HelpCircle } from 'lucide-react'
+import SaveButton from './SaveButton'
+import Navbar from '@/app/components/navbar'
 
 export default async function SchemePage({ params }) {
   const { slug } = await params
@@ -31,18 +33,7 @@ export default async function SchemePage({ params }) {
   return (
     <main className="min-h-screen bg-gray-50">
       {/* Navbar */}
-      <nav className="bg-white border-b border-gray-200 px-6 py-4">
-        <div className="max-w-6xl mx-auto flex items-center justify-between">
-          <Link href="/" className="text-xl font-bold text-blue-600">
-            FinAid SG
-          </Link>
-          <div className="flex gap-6 text-sm text-gray-600">
-            <Link href="/browse" className="hover:text-blue-600">Browse</Link>
-            <Link href="/chat" className="hover:text-blue-600">AI Assistant</Link>
-            <Link href="/about" className="hover:text-blue-600">About</Link>
-          </div>
-        </div>
-      </nav>
+      <Navbar activePage="home" />
 
       <div className="max-w-4xl mx-auto px-6 py-10">
         {/* Back button */}
@@ -139,15 +130,18 @@ export default async function SchemePage({ params }) {
               <h2 className="text-lg font-semibold text-gray-900">How To Apply</h2>
             </div>
             <p className="text-gray-700 mb-6">Click the button below to go to the official application page.</p>
-            <a
-              href={scheme.apply_url}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 bg-blue-600 text-white px-6 py-3 rounded-full font-medium hover:bg-blue-700 transition"
-            >
-              Apply Now
-              <ExternalLink className="w-4 h-4" />
-            </a>
+            <div className="flex items-center gap-3">
+              <a
+                href={scheme.apply_url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-2 bg-blue-600 text-white px-6 py-3 rounded-full font-medium hover:bg-blue-700 transition"
+              >
+                Apply Now
+                <ExternalLink className="w-4 h-4" />
+              </a>
+              <SaveButton schemeId={scheme.id} />
+            </div>
           </div>
         )}
 
