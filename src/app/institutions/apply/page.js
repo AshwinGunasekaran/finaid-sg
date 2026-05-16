@@ -5,6 +5,7 @@ import { supabase } from '@/lib/supabase'
 import Navbar from '@/app/components/navbar'
 import { useRouter } from 'next/navigation'
 import { Building, CheckCircle } from 'lucide-react'
+import { Upload } from 'lucide-react'
 
 export default function InstitutionApplyPage() {
   const router = useRouter()
@@ -18,6 +19,8 @@ export default function InstitutionApplyPage() {
   const [loading, setLoading] = useState(false)
   const [submitted, setSubmitted] = useState(false)
   const [error, setError] = useState(null)
+  const [logoFile, setLogoFile] = useState(null)
+  const [logoPreview, setLogoPreview] = useState(null)
 
   function handleChange(e) {
     const { name, value } = e.target
@@ -31,6 +34,13 @@ export default function InstitutionApplyPage() {
     }))
   }
 
+  function handleLogoChange(e) {
+    const file = e.target.files[0]
+    if (!file) return
+    setLogoFile(file)
+    setLogoPreview(URL.createObjectURL(file))
+  }
+
   async function handleSubmit() {
     setLoading(true)
     setError(null)
@@ -39,6 +49,23 @@ export default function InstitutionApplyPage() {
     if (!user) {
       router.push('/login')
       return
+    }
+
+    // Upload logo if provided
+    let logo_url = null
+    if (logoFile) {
+      const fileExt = logoFile.name.split('.').pop()
+      const fileName = `${form.slug}-${Date.now()}.${fileExt}`
+      const { error: uploadError } = await supabase.storage
+        .from('institution-logos')
+        .upload(fileName, logoFile)
+
+      if (!uploadError) {
+        const { data: urlData } = supabase.storage
+          .from('institution-logos')
+          .getPublicUrl(fileName)
+        logo_url = urlData.publicUrl
+      }
     }
 
     // Create institution
@@ -50,6 +77,7 @@ export default function InstitutionApplyPage() {
         description: form.description,
         website: form.website,
         contact_email: form.contact_email,
+        logo_url,
         status: 'pending'
       })
       .select()
@@ -111,6 +139,44 @@ export default function InstitutionApplyPage() {
         </p>
 
         <div className="bg-white border border-gray-200 rounded-2xl p-8">
+          {/* Logo Upload */}
+          <div className="mb-5">
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              Institution Logo
+            </label>
+            <div className="flex items-center gap-4">
+              {logoPreview ? (
+                <img
+                  src={logoPreview}
+                  alt="Logo preview"
+                  className="w-16 h-16 rounded-xl object-contain border border-gray-200 p-2"
+                />
+              ) : (
+                <div className="w-16 h-16 rounded-xl border border-gray-200 flex items-center justify-center bg-gray-50">
+                  <Building className="w-6 h-6 text-gray-300" />
+                </div>
+              )}
+              <label className="cursor-pointer inline-flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium border border-gray-200 text-gray-600 hover:border-blue-400 transition">
+                <Upload className="w-4 h-4" />
+                Upload Logo
+                <input
+                  type="file"
+                  accept="image/*"
+                  onChange={handleLogoChange}
+                  className="hidden"
+                />
+              </label>
+              {logoPreview && (
+                <button
+                  onClick={() => { setLogoFile(null); setLogoPreview(null) }}
+                  className="text-sm text-red-400 hover:text-red-600"
+                >
+                  Remove
+                </button>
+              )}
+            </div>
+            <p className="text-xs text-gray-400 mt-1">PNG, JPG or SVG. Max 2MB.</p>
+          </div>
           {/* Institution Name */}
           <div className="mb-5">
             <label className="block text-sm font-medium text-gray-700 mb-1">

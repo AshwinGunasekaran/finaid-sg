@@ -46,8 +46,16 @@ export default async function InstitutionsPage() {
               className="bg-white border border-gray-200 rounded-xl p-6 hover:shadow-md transition"
             >
               <div className="flex items-start gap-4">
-                <div className="bg-blue-50 rounded-xl p-3">
-                  <Building className="w-6 h-6 text-blue-600" />
+                <div className="w-12 h-12 rounded-xl border border-gray-200 flex items-center justify-center bg-gray-50 overflow-hidden shrink-0">
+                  {institution.logo_url ? (
+                    <img
+                      src={institution.logo_url}
+                      alt={institution.name}
+                      className="w-10 h-10 object-contain"
+                    />
+                  ) : (
+                    <Building className="w-6 h-6 text-blue-600" />
+                  )}
                 </div>
                 <div className="flex-1">
                   <div className="flex items-center gap-2 mb-1">
