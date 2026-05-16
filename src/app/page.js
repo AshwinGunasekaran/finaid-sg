@@ -56,6 +56,14 @@ export default async function Home() {
               <SearchBar selectedCategory={null} />
             </Suspense>
           </div>
+          <div className="mt-4">
+            <Link
+              href="/quiz"
+              className="inline-flex items-center gap-2 bg-blue-600 text-white px-6 py-3 rounded-full font-medium hover:bg-blue-700 transition text-sm"
+            >
+              Not sure where to start? Take the eligibility quiz →
+            </Link>
+          </div>
         </div>
       </section>
 
