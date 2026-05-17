@@ -99,8 +99,7 @@ export default async function BrowsePage({ searchParams }) {
                         <Link
                             key={scheme.id}
                             href={`/schemes/${scheme.slug}`}
-                            className={`bg-white rounded-xl p-6 hover:shadow-md transition border ${scheme.featured ? 'border-yellow-300 ring-1 ring-yellow-200' : 'border-gray-200'
-                                }`}
+                            className="bg-white border border-gray-200 rounded-xl p-6 hover:shadow-md transition"
                         >
                             <div className="flex items-center justify-between mb-1">
                                 <span className="text-xs font-medium text-blue-600 bg-blue-50 px-2 py-1 rounded-full">
