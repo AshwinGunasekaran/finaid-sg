@@ -28,6 +28,8 @@ export default async function BrowsePage({ searchParams }) {
         .from('schemes')
         .select('*, categories(name, slug)')
         .eq('is_active', true)
+        .order('featured', { ascending: false })
+        .order('created_at', { ascending: false })
 
     if (selectedCategory) {
         const { data: categoryData } = await supabase
@@ -97,11 +99,19 @@ export default async function BrowsePage({ searchParams }) {
                         <Link
                             key={scheme.id}
                             href={`/schemes/${scheme.slug}`}
-                            className="bg-white border border-gray-200 rounded-xl p-6 hover:shadow-md transition"
+                            className={`bg-white rounded-xl p-6 hover:shadow-md transition border ${scheme.featured ? 'border-yellow-300 ring-1 ring-yellow-200' : 'border-gray-200'
+                                }`}
                         >
-                            <span className="text-xs font-medium text-blue-600 bg-blue-50 px-2 py-1 rounded-full">
-                                {scheme.categories?.name}
-                            </span>
+                            <div className="flex items-center justify-between mb-1">
+                                <span className="text-xs font-medium text-blue-600 bg-blue-50 px-2 py-1 rounded-full">
+                                    {scheme.categories?.name}
+                                </span>
+                                {scheme.featured && (
+                                    <span className="text-xs font-medium text-yellow-600 bg-yellow-50 px-2 py-1 rounded-full flex items-center gap-1">
+                                        ⭐ Featured
+                                    </span>
+                                )}
+                            </div>
                             <h3 className="font-semibold text-gray-900 mt-3 mb-2">{scheme.title}</h3>
                             <p className="text-sm text-gray-500 line-clamp-3">{scheme.description}</p>
                             <div className="mt-4 flex items-center justify-between">
