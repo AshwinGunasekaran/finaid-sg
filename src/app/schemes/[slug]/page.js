@@ -1,8 +1,10 @@
 import { supabase } from '@/lib/supabase'
 import Link from 'next/link'
-import { ArrowLeft, ExternalLink, CheckCircle, Info, HelpCircle } from 'lucide-react'
+import { ArrowLeft, CheckCircle, Info, HelpCircle } from 'lucide-react'
 import SaveButton from './SaveButton'
 import Navbar from '@/app/components/navbar'
+import SchemeAnalytics from './SchemeAnalytics'
+import ApplyButton from './ApplyButton'
 
 export default async function SchemePage({ params }) {
   const { slug } = await params
@@ -33,7 +35,8 @@ export default async function SchemePage({ params }) {
   return (
     <main className="min-h-screen bg-gray-50">
       {/* Navbar */}
-      <Navbar activePage="home" />
+      <Navbar activePage="" />
+      <SchemeAnalytics schemeId={scheme.id} />
 
       <div className="max-w-4xl mx-auto px-6 py-10">
         {/* Back button */}
@@ -135,15 +138,7 @@ export default async function SchemePage({ params }) {
             <p className="text-gray-700 mb-6">Click the button below to go to the official application page.</p>
             <div className="flex flex-col gap-3">
               <div className="flex items-center gap-3">
-                <a
-                  href={scheme.apply_url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center gap-2 bg-blue-600 text-white px-6 py-3 rounded-full font-medium hover:bg-blue-700 transition"
-                >
-                  Apply Now
-                  <ExternalLink className="w-4 h-4" />
-                </a>
+                  <ApplyButton applyUrl={scheme.apply_url} schemeId={scheme.id} />
               </div>
               <Link
                 href={`/compare?scheme=${scheme.slug}`}

@@ -13,6 +13,7 @@ export default function InstitutionDashboard() {
     const [schemes, setSchemes] = useState([])
     const [loading, setLoading] = useState(true)
     const [error, setError] = useState(null)
+    const [analytics, setAnalytics] = useState({ totalViews: 0, totalClicks: 0, raw: [] })
 
     useEffect(() => {
         async function load() {
@@ -51,6 +52,25 @@ export default function InstitutionDashboard() {
                 .order('created_at', { ascending: false })
 
             setSchemes(schemes || [])
+
+            // Get analytics for all schemes
+            const schemeIds = schemes?.map(s => s.id) || []
+            let analytics = []
+
+            if (schemeIds.length > 0) {
+                const { data: analyticsData } = await supabase
+                    .from('scheme_analytics')
+                    .select('*')
+                    .in('scheme_id', schemeIds)
+                analytics = analyticsData || []
+            }
+
+            // Calculate totals
+            const totalViews = analytics.filter(a => a.event_type === 'view').length
+            const totalClicks = analytics.filter(a => a.event_type === 'click').length
+
+            setAnalytics({ totalViews, totalClicks, raw: analytics })
+
             setLoading(false)
         }
         load()
@@ -103,7 +123,7 @@ export default function InstitutionDashboard() {
                 </div>
 
                 {/* Stats */}
-                <div className="grid grid-cols-3 gap-4 mb-8">
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
                     <div className="bg-white border border-gray-200 rounded-2xl p-6">
                         <p className="text-sm text-gray-500 mb-1">Total Schemes</p>
                         <p className="text-3xl font-bold text-gray-900">{schemes.length}</p>
@@ -115,8 +135,12 @@ export default function InstitutionDashboard() {
                         </p>
                     </div>
                     <div className="bg-white border border-gray-200 rounded-2xl p-6">
-                        <p className="text-sm text-gray-500 mb-1">Institution Status</p>
-                        <p className="text-lg font-bold text-blue-600 mt-1">✓ Approved</p>
+                        <p className="text-sm text-gray-500 mb-1">Total Views</p>
+                        <p className="text-3xl font-bold text-blue-600">{analytics.totalViews}</p>
+                    </div>
+                    <div className="bg-white border border-gray-200 rounded-2xl p-6">
+                        <p className="text-sm text-gray-500 mb-1">Total Clicks</p>
+                        <p className="text-3xl font-bold text-purple-600">{analytics.totalClicks}</p>
                     </div>
                 </div>
 
@@ -157,6 +181,14 @@ export default function InstitutionDashboard() {
                                         </div>
                                         <p className="font-medium text-gray-900">{scheme.title}</p>
                                         <p className="text-sm text-green-600">{scheme.amount}</p>
+                                        <div className="flex gap-3 mt-1">
+                                            <span className="text-xs text-gray-400">
+                                                👁 {analytics.raw.filter(a => a.scheme_id === scheme.id && a.event_type === 'view').length} views
+                                            </span>
+                                            <span className="text-xs text-gray-400">
+                                                🖱 {analytics.raw.filter(a => a.scheme_id === scheme.id && a.event_type === 'click').length} clicks
+                                            </span>
+                                        </div>
                                     </div>
                                     <div className="flex items-center gap-3">
                                         <Link
