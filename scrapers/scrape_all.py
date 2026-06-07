@@ -1,4 +1,5 @@
 import asyncio
+import time
 from playwright.async_api import async_playwright
 from bs4 import BeautifulSoup
 from supabase import create_client
@@ -10,8 +11,6 @@ load_dotenv()
 
 supabase = create_client(os.getenv("SUPABASE_URL"), os.getenv("SUPABASE_KEY"))
 
-# List of schemes to scrape
-# Add more schemes here as you grow the database
 SCHEMES_TO_SCRAPE = [
     {
         "slug": "moe-higher-education-bursary",
@@ -30,16 +29,25 @@ SCHEMES_TO_SCRAPE = [
     },
 ]
 
+def supabase_with_retry(fn, retries=3, delay=5):
+    for attempt in range(retries):
+        try:
+            return fn()
+        except Exception as e:
+            print(f"  Supabase attempt {attempt + 1} failed: {e}")
+            if attempt < retries - 1:
+                time.sleep(delay)
+    return None
+
 async def scrape_scheme(page, scheme):
     print(f"Scraping: {scheme['slug']}...")
     
     try:
         await page.goto(scheme["url"], wait_until="networkidle", timeout=60000)
-        await page.wait_for_timeout(3000)  # Extra 3 seconds for JS to render
+        await page.wait_for_timeout(3000)
         content = await page.content()
         soup = BeautifulSoup(content, "html.parser")
 
-        # Try to get main content
         main_content = (
             soup.find("main") or
             soup.find("div", class_="content") or
@@ -52,43 +60,52 @@ async def scrape_scheme(page, scheme):
             paragraphs = main_content.find_all("p")
             description = " ".join([p.get_text(strip=True) for p in paragraphs[:3]])
 
-        # Clean up whitespace
         description = " ".join(description.split())
 
         if not description or len(description) < 20:
             print(f"  ⚠️ Could not extract description for {scheme['slug']}, skipping update")
             status = "no_content"
         else:
-            # Update scheme
-            supabase.table("schemes").update({
+            result = supabase_with_retry(lambda: supabase.table("schemes").update({
                 "description": description[:1000],
                 "last_scraped": datetime.now().isoformat()
-            }).eq("slug", scheme["slug"]).execute()
-            print(f"  ✓ Updated {scheme['slug']}")
-            status = "success"
+            }).eq("slug", scheme["slug"]).execute())
+            
+            if result:
+                print(f"  ✓ Updated {scheme['slug']}")
+                status = "success"
+            else:
+                print(f"  ⚠️ Could not update {scheme['slug']} in database")
+                status = "db_error"
 
-        # Log it
-        scheme_row = supabase.table("schemes").select("id").eq("slug", scheme["slug"]).single().execute()
-        if scheme_row.data:
-            supabase.table("scrape_logs").insert({
+        scheme_row = supabase_with_retry(lambda: supabase.table("schemes").select("id").eq("slug", scheme["slug"]).single().execute())
+        
+        if scheme_row and scheme_row.data:
+            supabase_with_retry(lambda: supabase.table("scrape_logs").insert({
                 "scheme_id": scheme_row.data["id"],
                 "status": status,
                 "notes": scheme["notes"]
-            }).execute()
+            }).execute())
 
     except Exception as e:
         print(f"  ✗ Error scraping {scheme['slug']}: {e}")
-        scheme_row = supabase.table("schemes").select("id").eq("slug", scheme["slug"]).single().execute()
-        if scheme_row.data:
-            supabase.table("scrape_logs").insert({
-                "scheme_id": scheme_row.data["id"],
-                "status": "error",
-                "notes": str(e)
-            }).execute()
+        try:
+            scheme_row = supabase_with_retry(lambda: supabase.table("schemes").select("id").eq("slug", scheme["slug"]).single().execute())
+            if scheme_row and scheme_row.data:
+                supabase_with_retry(lambda: supabase.table("scrape_logs").insert({
+                    "scheme_id": scheme_row.data["id"],
+                    "status": "error",
+                    "notes": str(e)[:200]
+                }).execute())
+        except Exception as log_error:
+            print(f"  Could not log error: {log_error}")
 
 async def scrape_all():
     print("=== Starting full scrape ===")
     print(f"Scraping {len(SCHEMES_TO_SCRAPE)} schemes...\n")
+
+    # Wait a bit for network to stabilize
+    time.sleep(3)
 
     async with async_playwright() as p:
         browser = await p.chromium.launch(headless=True)
@@ -96,7 +113,7 @@ async def scrape_all():
 
         for scheme in SCHEMES_TO_SCRAPE:
             await scrape_scheme(page, scheme)
-            await asyncio.sleep(2)  # Be polite, wait between requests
+            await asyncio.sleep(2)
 
         await browser.close()
 
